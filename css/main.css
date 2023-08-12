@@ -3,8 +3,13 @@ body {
     padding: 0;
 }
 
-#board {
+#ocean {
     background-color: rgb(3, 3, 255);
     height: 100vh;
     position: relative;
+}
+
+#ship {
+    background-color: bisque;
+    position: absolute;
 }

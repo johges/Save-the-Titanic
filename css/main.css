@@ -7,9 +7,20 @@ body {
     background-color: rgb(3, 3, 255);
     height: 100vh;
     position: relative;
+    overflow: hidden;
 }
 
 #ship {
     background-color: bisque;
+    position: absolute;
+}
+
+#icebergs {
+    position: absolute;
+    transform: translate(-50%, -100%);
+
+}
+
+#triangle {
     position: absolute;
 }

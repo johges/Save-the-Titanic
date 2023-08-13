@@ -1,26 +1,29 @@
 body {
     margin: 0;
-    padding: 0;
-}
-
-#ocean {
-    background-color: rgb(3, 3, 255);
-    height: 100vh;
-    position: relative;
     overflow: hidden;
 }
 
+#ocean {
+    background-color: rgb(117, 117, 188);
+    height: 100vh;
+    position: relative;
+}
+
 #ship {
-    background-color: bisque;
     position: absolute;
 }
 
 #icebergs {
     position: absolute;
     transform: translate(-50%, -100%);
-
 }
 
 #triangle {
     position: absolute;
+}
+
+#page-gameover {
+    text-align: center;
+    background-color: aquamarine;
+    color:black;
 }

@@ -2,6 +2,7 @@ class Game {
     constructor () {
         this.ship = new Ship
         this.icebergsArr = [];
+        this.numberOfIcebergsPassed = 0;
     }
     start() {
 
@@ -38,6 +39,14 @@ class Game {
             this.icebergsArr.shift(); // remove from the array
         }
     }
+    icebergsPassed() {
+        numberOfIcebergsPassed++;
+
+        if (numberOfIcebergsPassed >= 3) {
+            console.log("you won");
+        }
+    }
+
     detectCollision(iceberg) {
         if (
             this.ship.positionX < iceberg.positionX + iceberg.size &&
@@ -46,15 +55,15 @@ class Game {
             this.ship.positionY + this.ship.width > iceberg.positionY 
         ) {
             // Collision detected!
-            console.log("game over")
+            location.href = "./gameover.html";
         }
     }
 }
 
 class Ship {
     constructor() {
-        this.width = 20;
-        this.height = 10;
+        this.width = 17;
+        this.height = 12;
         this.positionX = 0;
         this.positionY = 50 - (this.height / 2);
         this.domElement = null;
@@ -63,9 +72,10 @@ class Ship {
     }
     createDomElement() {
         // create dom element ship
-        this.domElement = document.createElement("div");
+        this.domElement = document.createElement("img");
 
         // set id ship
+        this.domElement.src = "./images/titanic.png"
         this.domElement.id = "ship";
         this.domElement.style.width = this.width + "vw";
         this.domElement.style.height = this.height + "vh";

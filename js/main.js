@@ -37,22 +37,38 @@ class Game {
         if(iceberg.positionX < 0 - iceberg.size) {
             iceberg.domElement.remove(); // remove from the dom
             this.icebergsArr.shift(); // remove from the array
+
+            game.icebergsPassed(); // counts passed icebergs
         }
     }
     icebergsPassed() {
-        numberOfIcebergsPassed++;
-
-        if (numberOfIcebergsPassed >= 3) {
-            console.log("you won");
+        this.numberOfIcebergsPassed++;
+        if (this.numberOfIcebergsPassed >= 3) {
+            location.href = "./winningpage.html";
         }
     }
 
     detectCollision(iceberg) {
-        if (
-            this.ship.positionX < iceberg.positionX + iceberg.size &&
-            this.ship.positionX + this.ship.height > iceberg.positionX &&
-            this.ship.positionY < iceberg.positionY + iceberg.size &&
-            this.ship.positionY + this.ship.width > iceberg.positionY 
+            const shipLeft = this.ship.positionX;
+            const shipRight = this.ship.positionX + this.ship.width;
+            const shipTop = this.ship.positionY;
+            const shipBottom = this.ship.positionY + this.ship.height;
+        
+            const icebergLeft = iceberg.positionX;
+            const icebergRight = iceberg.positionX + iceberg.size;
+            const icebergTop = iceberg.positionY;
+            const icebergBottom = iceberg.positionY + iceberg.size;
+        
+            if (
+                shipLeft < icebergRight &&
+                shipRight > icebergLeft &&
+                shipTop < icebergBottom &&
+                shipBottom > icebergTop
+                || // Oder-Bedingung hinzufügen für untere Kollision
+                shipTop < icebergBottom &&
+                shipBottom > icebergBottom &&
+                shipLeft < icebergRight &&
+                shipRight > icebergLeft
         ) {
             // Collision detected!
             location.href = "./gameover.html";

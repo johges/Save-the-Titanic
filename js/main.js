@@ -1,11 +1,23 @@
+const timerElement = document.getElementById("timer");
+
 class Game {
     constructor() {
         this.ship = new Ship
         this.icebergsArr = [];
         this.numberOfIcebergsPassed = 0;
+        this.startTime = null;
+        this.timerInterval = null;
+        this.updateTimer = this.updateTimer.bind(this);
+        this.lastTime = 0;
     }
 
     start() {
+        //start the timer
+        this.startTime = Date.now();
+        this.timerInterval = setInterval(() => {
+            this.updateTimer();
+        }, 1000);
+
 
         // attach event listener
         this.attachEventListener();
@@ -17,7 +29,7 @@ class Game {
         setInterval(() => {
             const newIcebergs = new Icebergs(this.isAccelerated);
             this.icebergsArr.push(newIcebergs);
-        }, 3000);
+        }, 1000);
 
         // move icebergs to the left 
         setInterval(() => {
@@ -27,6 +39,15 @@ class Game {
                 this.detectCollision(iceberg); // detect collision
             })
         }, 100);
+    }
+
+    updateTimer() {
+        const currentTime = Date.now();
+        const elapsedTime = (currentTime - this.startTime) / 1000;
+        const minutes = Math.floor(elapsedTime / 60);
+        const seconds = Math.floor(elapsedTime % 60);
+        const formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        timerElement.textContent = formattedTime;
     }
 
     attachEventListener() {
@@ -44,7 +65,6 @@ class Game {
     toggleAcceleration() {
         this.isAccelerated = true;
         this.accelerateVisibleIcebergs();
-        
         setTimeout(() => {
             this.isAccelerated = false;
         }, 6000);

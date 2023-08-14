@@ -9,6 +9,7 @@ class Game {
         this.timerInterval = null;
         this.updateTimer = this.updateTimer.bind(this);
         this.lastTime = 0;
+
     }
 
     start() {
@@ -29,14 +30,19 @@ class Game {
         setInterval(() => {
             const newIcebergs = new Icebergs(this.isAccelerated);
             this.icebergsArr.push(newIcebergs);
+            console.log(this.numberOfIcebergsPassed)
         }, 1000);
 
         // move icebergs to the left 
         setInterval(() => {
-            this.icebergsArr.forEach((iceberg) => {
+            this.icebergsArr.forEach((iceberg, i) => {
+                console.log(this.icebergsArr)
+                this.removeIcebergsIfOutside(iceberg, i); // remove if outside
                 iceberg.moveLeft(); // move
-                this.removeIcebergsIfOutside(iceberg); // remove if outside
                 this.detectCollision(iceberg); // detect collision
+                if (this.numberOfIcebergsPassed > 3) {
+                    location.href = "./winningpage.html";
+                }
             })
         }, 100);
     }
@@ -57,12 +63,12 @@ class Game {
             } else if (event.key === "ArrowUp") {
                 this.ship.moveUp();
             } else if (event.key === "ArrowRight") {
-                this.toggleAcceleration();
+                this.switchToAcceleration();
             }
         })
     }
 
-    toggleAcceleration() {
+    switchToAcceleration() {
         this.isAccelerated = true;
         this.accelerateVisibleIcebergs();
         setTimeout(() => {
@@ -76,29 +82,22 @@ class Game {
                 iceberg.isAccelerated = true;
             }
         });
-
-        setTimeout(() => {
-            this.icebergsArr.forEach((iceberg) => {
-                if (iceberg.positionX <= 100) {
-                    iceberg.isAccelerated = false;
-                }
-            })
-        }, 6000);
     }
 
-    removeIcebergsIfOutside(iceberg) {
-        if (iceberg.positionX < 0 - iceberg.size) {
+    removeIcebergsIfOutside(iceberg, i) {
+        // console.log("inside icebers function", iceberg) 
+        if (iceberg.positionX < 0) {
             iceberg.domElement.remove(); // remove from the dom
-            this.icebergsArr.shift(); // remove from the array
-            game.icebergsPassed(); // counts passed icebergs
+            this.icebergsArr.splice(i, 1); // remove from the array
+            this.numberOfIcebergsPassed++ // counts passed icebergs
         }
     }
 
     icebergsPassed() {
         this.numberOfIcebergsPassed++;
-        if (this.numberOfIcebergsPassed >= 10) {
+        if (this.numberOfIcebergsPassed >= 3) {
 
-            // all icebergs passed
+            // all icebergs passed - you won!
             location.href = "./winningpage.html";
         }
     }
@@ -120,7 +119,7 @@ class Game {
             shipTop > icebergBottom &&
             shipBottom < icebergTop
         ) {
-            // Collision detected!
+            // Collision detected! - you won!
             location.href = "./gameover.html";
         }
     }
@@ -223,11 +222,12 @@ class Icebergs {
         // append triangle to iceberg div 
         this.domElement.appendChild(triangle);
     }
+    // apply acceleration to move the iceberg to the left
     moveLeft() {
         if (this.positionX > 0 - this.size) {
-        const speed = this.isAccelerated ? 4 : 2;
-        this.positionX -= speed;
-        this.domElement.style.left = this.positionX + "vw";
+            const speed = this.isAccelerated ? 4 : 2;
+            this.positionX -= speed;
+            this.domElement.style.left = this.positionX + "vw";
         }
     }
 }

@@ -1,4 +1,5 @@
 const timerElement = document.getElementById("timer");
+let backgroundPosition = 100; 
 
 class Game {
     constructor() {
@@ -8,8 +9,11 @@ class Game {
         this.startTime = null;
         this.timerInterval = null;
         this.updateTimer = this.updateTimer.bind(this);
-        this.lastTime = 0;
+        this.startBackgroundMovement();
+    }
 
+    startBackgroundMovement() {
+        this.moveBackground();
     }
 
     start() {
@@ -30,19 +34,24 @@ class Game {
         setInterval(() => {
             const newIcebergs = new Icebergs(this.isAccelerated);
             this.icebergsArr.push(newIcebergs);
-            console.log(this.numberOfIcebergsPassed)
         }, 1000);
 
         // move icebergs to the left 
         setInterval(() => {
             this.icebergsArr.forEach((iceberg, i) => {
-                console.log(this.icebergsArr)
                 this.removeIcebergsIfOutside(iceberg, i); // remove if outside
                 iceberg.moveLeft(); // move
                 this.detectCollision(iceberg); // detect collision
                 this.icebergsPassed(); // invoking the method icebergsPassed
             })
         }, 100);
+    }
+
+    moveBackground() {
+        const oceanElement = document.getElementById("ocean");
+        backgroundPosition -= this.isAccelerated ? 0.4 : 0.2;
+        oceanElement.style.backgroundPosition = `${backgroundPosition}vw 0`;
+        requestAnimationFrame(() => this.moveBackground());
     }
 
     updateTimer() {
@@ -83,7 +92,6 @@ class Game {
     }
 
     removeIcebergsIfOutside(iceberg, i) {
-        // console.log("inside icebers function", iceberg) 
         if (iceberg.positionX < 0) {
             iceberg.domElement.remove(); // remove from the dom
             this.icebergsArr.splice(i, 1); // remove from the array
@@ -231,7 +239,6 @@ class Icebergs {
         }
     }
 }
-
 
 const game = new Game();
 game.start();

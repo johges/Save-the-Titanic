@@ -5,5 +5,5 @@ if (playTime) {
     const seconds = Math.floor(playTime % 60);
     const formattedPlayTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     const playTimeDisplay = document.querySelector('.playTimeDisplay');
-    playTimeDisplay.textContent = `Your time: ${formattedPlayTime}`;
+    playTimeDisplay.textContent = `Winning time: ${formattedPlayTime}`;
 }

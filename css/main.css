@@ -4,7 +4,9 @@ body {
 }
 
 #ocean {
-    background-color: rgb(117, 117, 188);
+    background-image: url(../images/background.jpg);
+    background-repeat: repeat-x;
+    background-size: cover;
     height: 100vh;
     position: relative;
 }

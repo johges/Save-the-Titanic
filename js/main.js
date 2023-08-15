@@ -40,9 +40,7 @@ class Game {
                 this.removeIcebergsIfOutside(iceberg, i); // remove if outside
                 iceberg.moveLeft(); // move
                 this.detectCollision(iceberg); // detect collision
-                if (this.numberOfIcebergsPassed > 3) {
-                    location.href = "./winningpage.html";
-                }
+                this.icebergsPassed(); // invoking the method icebergsPassed
             })
         }, 100);
     }
@@ -94,9 +92,7 @@ class Game {
     }
 
     icebergsPassed() {
-        this.numberOfIcebergsPassed++;
-        if (this.numberOfIcebergsPassed >= 3) {
-
+        if (this.numberOfIcebergsPassed >= 5) {
             // all icebergs passed - you won!
             location.href = "./winningpage.html";
         }
@@ -119,7 +115,7 @@ class Game {
             shipTop > icebergBottom &&
             shipBottom < icebergTop
         ) {
-            // Collision detected! - you won!
+            // Collision detected! - you lost!
             location.href = "./gameover.html";
         }
     }

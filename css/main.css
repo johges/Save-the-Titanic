@@ -51,3 +51,10 @@ body {
     color:black;
 }
 
+.playTimeDisplay {
+    font-size: 24px;
+    color: black;
+    margin-top: 10px;
+}
+
+

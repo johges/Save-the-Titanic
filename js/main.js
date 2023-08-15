@@ -94,6 +94,10 @@ class Game {
     icebergsPassed() {
         if (this.numberOfIcebergsPassed >= 5) {
             // all icebergs passed - you won!
+            const currentTime = Date.now();
+            const elapsedTime = Math.floor((currentTime - this.startTime) / 1000);
+            localStorage.setItem("playTime", elapsedTime); // storing the playTime in the browser to make it available between different pages or sessions
+
             location.href = "./winningpage.html";
         }
     }
@@ -228,5 +232,7 @@ class Icebergs {
     }
 }
 
+
 const game = new Game();
 game.start();
+

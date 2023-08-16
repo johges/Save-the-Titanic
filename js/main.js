@@ -5,6 +5,7 @@ class Game {
     constructor() {
         this.ship = new Ship
         this.icebergsArr = [];
+        this.octopusArr = [];
         this.numberOfIcebergsPassed = 0;
         this.startTime = null;
         this.timerInterval = null;
@@ -36,6 +37,14 @@ class Game {
             this.icebergsArr.push(newIcebergs);
         }, 1000);
 
+        // make octopuses appear
+        setInterval(() => {
+            const newOctopus = new Octopus(this.isAccelerated);
+            // newOctopus.index = this.octopusArr.length;
+            this.octopusArr.push(newOctopus);
+            // this.accelerateVisibleOctopus();
+        }, 2000);
+
         // move icebergs to the left 
         setInterval(() => {
             this.icebergsArr.forEach((iceberg, i) => {
@@ -45,6 +54,15 @@ class Game {
                 this.icebergsPassed(); // invoking the method icebergsPassed
             })
         }, 100);
+
+        // move octopuses to the left 
+        setInterval(() => {
+            this.octopusArr.forEach((octopus, i) => {
+                this.removeOctopusIfOutside(octopus, i);
+                octopus.moveLeft();
+                this.detectOctopusCollision(octopus);
+            });
+        }, 50)
     }
 
     moveBackground() {
@@ -91,6 +109,22 @@ class Game {
         });
     }
 
+    switchToAccelerationOctopus() {
+        this.isAccelerated = true;
+        this.accelerateVisibleOctopus();
+        setTimeout(() => {
+            this.isAccelerated = false;
+        }, 6000);
+    }
+
+    accelerateVisibleOctopus() {
+        this.octopusArr.forEach((octopus) => {
+            if (octopus.positionX <= 100 ) {
+                octopus.isAccelerated = true;
+            }
+        });
+    }
+
     removeIcebergsIfOutside(iceberg, i) {
         if (iceberg.positionX < 0) {
             iceberg.domElement.remove(); // remove from the dom
@@ -99,8 +133,15 @@ class Game {
         }
     }
 
+    removeOctopusIfOutside(octopus, i) {
+        if (octopus.positionX < 0) {
+            octopus.domElement.remove();
+            this.octopusArr.splice(i, 1);
+        }
+    }
+
     icebergsPassed() {
-        if (this.numberOfIcebergsPassed >= 5) {
+        if (this.numberOfIcebergsPassed >= 20) {
             // all icebergs passed - you won!
             const currentTime = Date.now();
             const elapsedTime = Math.floor((currentTime - this.startTime) / 1000);
@@ -131,6 +172,41 @@ class Game {
             location.href = "./gameover.html";
         }
     }
+
+    detectOctopusCollision(octopus) {
+        const shipLeft = this.ship.positionX;
+        const shipRight = this.ship.positionX + this.ship.width;
+        const shipTop = this.ship.positionY + this.ship.height;
+        const shipBottom = this.ship.positionY;
+
+        const octopusLeft = octopus.positionX;
+        const octopusRight = octopus.positionX + octopus.radius * 2;
+        const octopusTop = octopus.positionY + octopus.radius * 2;
+        const octopusBottom = octopus.positionY;
+
+        const isColliding = (
+            shipLeft < octopusRight &&
+            shipRight > octopusLeft &&
+            shipTop > octopusBottom &&
+            shipBottom < octopusTop
+        );
+    
+        if (isColliding) {
+            this.handleOctopusCollision(octopus);
+        }
+    }
+
+    handleOctopusCollision(octopus) {
+        octopus.domElement.remove();
+        this.octopusArr.splice(octopus.index, 1);
+
+        const currentTime = Date.now();
+        const elapsedTime = (currentTime - this.startTime) / 1000;
+        const newTime = elapsedTime + 5;
+        this.startTime = currentTime - newTime * 1000;
+        this.updateTimer();
+    }
+    
 }
 
 class Ship {
@@ -234,6 +310,71 @@ class Icebergs {
     moveLeft() {
         if (this.positionX > 0 - this.size) {
             const speed = this.isAccelerated ? 4 : 2;
+            this.positionX -= speed;
+            this.domElement.style.left = this.positionX + "vw";
+        }
+    }
+}
+
+class Octopus {
+    constructor(isAccelerated) {
+        this.radius = 8;
+        this.positionX = 100;
+        this.positionY = Math.floor(Math.random() * (100 - this.radius * 2 + 1)); //
+        this.domElement = null;
+
+        this.isAccelerated = isAccelerated;
+
+        this.createDomElement();
+        this.createCircle();
+    }
+    createDomElement() {
+        // create dom element octupus
+        this.domElement = document.createElement("div");
+
+        // set id octopus
+        this.domElement.id = "octopus";
+        this.domElement.style.left = this.positionX + "vw";
+        this.domElement.style.bottom = this.positionY + "vh";
+
+        // append to the dom
+        const parentElm = document.getElementById("ocean");
+        parentElm.appendChild(this.domElement);
+    }
+    createCircle() {
+        const circle = document.createElement("div");
+        circle.style.width = "0";
+        circle.style.height = "0";
+        circle.style.borderRadius = `${this.radius}vw`; 
+        circle.style.position = "relative";
+
+        // image positioning in centre of circle
+        const centerX = this.radius;
+        const centerY = this.radius;
+
+        // add the iceberg image
+        const octopusImage = document.createElement("img");
+        octopusImage.src = "./images/octopus.png";
+        octopusImage.style.width = this.radius * 2 + "vw";
+        octopusImage.style.height = this.radius * 2 + "vh";
+        octopusImage.style.position = "absolute";
+        octopusImage.style.left = `calc(50% - ${centerX}vw)`;
+        octopusImage.style.bottom = `calc(100% - ${centerY}vh)`;
+
+        // apply acceleration if it's currently active
+        const speed = this.isAccelerated ? 2 : 1.5;
+        this.positionX -= speed;
+
+        // append image to triangle
+        circle.appendChild(octopusImage);
+
+        // append triangle to iceberg div 
+        this.domElement.appendChild(circle);
+    }
+    // apply acceleration to move the iceberg to the left
+    moveLeft() {
+        if (this.positionX > 0 - this.radius * 2) {
+            const speed = this.isAccelerated ? 2 : 1.5;
             this.positionX -= speed;
             this.domElement.style.left = this.positionX + "vw";
         }

@@ -22,10 +22,13 @@ h1 {
 h2 {
     text-align: center;
     margin-top: 20px;
+    color: antiquewhite;
 }
 
 p {
     text-align:center;
+    font-size:larger;
+    color:antiquewhite;
 }
 
 button {
@@ -61,30 +64,27 @@ a {
 }
 
 .instructions {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    text-align: center;
+    margin: 5px auto;
     width: 50%;
     padding: 5px 10px;
     border-radius: 15px;
     background-color: #8e5e27;
-    
+}
+
+.obstacles, .arrows {
+    display: inline-block;
+    margin: 0 50px;
+    vertical-align: middle;
 }
 
 .obstacles {
     width: 10%;
-    margin-left: 120px;
 }
 
 .arrows {
     width: 5%;
-    /*display: block;*/
-    margin-left: 150px;
-    /*margin-right: auto;*/
 }
-
 /*Game Mechanics */
 
 #ocean {

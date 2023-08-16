@@ -40,9 +40,7 @@ class Game {
         // make octopuses appear
         setInterval(() => {
             const newOctopus = new Octopus(this.isAccelerated);
-            // newOctopus.index = this.octopusArr.length;
             this.octopusArr.push(newOctopus);
-            // this.accelerateVisibleOctopus();
         }, 2000);
 
         // move icebergs to the left 
@@ -99,6 +97,10 @@ class Game {
         setTimeout(() => {
             this.isAccelerated = false;
         }, 6000);
+        this.accelerateVisibleOctopus();
+        setTimeout(() => {
+            this.isAccelerated = false;
+        }, 6000);
     }
 
     accelerateVisibleIcebergs() {
@@ -109,13 +111,13 @@ class Game {
         });
     }
 
-    switchToAccelerationOctopus() {
-        this.isAccelerated = true;
-        this.accelerateVisibleOctopus();
-        setTimeout(() => {
-            this.isAccelerated = false;
-        }, 6000);
-    }
+    // switchToAccelerationOctopus() {
+    //     this.isAccelerated = true;
+    //     this.accelerateVisibleOctopus();
+    //     setTimeout(() => {
+    //         this.isAccelerated = false;
+    //     }, 6000);
+    // }
 
     accelerateVisibleOctopus() {
         this.octopusArr.forEach((octopus) => {
@@ -362,19 +364,19 @@ class Octopus {
         octopusImage.style.bottom = `calc(100% - ${centerY}vh)`;
 
         // apply acceleration if it's currently active
-        const speed = this.isAccelerated ? 2 : 1.5;
+        const speed = this.isAccelerated ? 4 : 2;
         this.positionX -= speed;
 
-        // append image to triangle
+        // append image to circle
         circle.appendChild(octopusImage);
 
-        // append triangle to iceberg div 
+        // append circle to octopus div 
         this.domElement.appendChild(circle);
     }
-    // apply acceleration to move the iceberg to the left
+    // apply acceleration to move the octopus to the left
     moveLeft() {
         if (this.positionX > 0 - this.radius * 2) {
-            const speed = this.isAccelerated ? 2 : 1.5;
+            const speed = this.isAccelerated ? 4 : 2;
             this.positionX -= speed;
             this.domElement.style.left = this.positionX + "vw";
         }

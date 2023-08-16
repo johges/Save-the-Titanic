@@ -6,6 +6,7 @@ class Game {
         this.ship = new Ship
         this.icebergsArr = [];
         this.octopusArr = [];
+        this.coalIslandArr = [];
         this.numberOfIcebergsPassed = 0;
         this.startTime = null;
         this.timerInterval = null;
@@ -37,6 +38,12 @@ class Game {
             this.icebergsArr.push(newIcebergs);
         }, 1000);
 
+        // make coal islands appear
+        setInterval(() => {
+            const newCoalIsland = new CoalIsland(this.isAccelerated);
+            this.coalIslandArr.push(newCoalIsland);
+        }, 3000);
+
         // make octopuses appear
         setInterval(() => {
             const newOctopus = new Octopus(this.isAccelerated);
@@ -51,7 +58,16 @@ class Game {
                 this.detectCollision(iceberg); // detect collision
                 this.icebergsPassed(); // invoking the method icebergsPassed
             })
-        }, 100);
+        }, 75);
+
+        // move coal islands to the left 
+        setInterval(() => {
+            this.coalIslandArr.forEach((coalIsland, i) => {
+                this.removeCoalIslandIfOutside(coalIsland, i); // remove if outside
+                coalIsland.moveLeft(); // move
+                this.detectCoalIslandCollision(coalIsland); // detect collision
+            })
+        }, 50);
 
         // move octopuses to the left 
         setInterval(() => {
@@ -97,6 +113,12 @@ class Game {
         setTimeout(() => {
             this.isAccelerated = false;
         }, 6000);
+
+        this.accelerateVisibleCoalIsland();
+        setTimeout(() => {
+            this.isAccelerated = false;
+        }, 6000);
+
         this.accelerateVisibleOctopus();
         setTimeout(() => {
             this.isAccelerated = false;
@@ -111,13 +133,13 @@ class Game {
         });
     }
 
-    // switchToAccelerationOctopus() {
-    //     this.isAccelerated = true;
-    //     this.accelerateVisibleOctopus();
-    //     setTimeout(() => {
-    //         this.isAccelerated = false;
-    //     }, 6000);
-    // }
+    accelerateVisibleCoalIsland() {
+        this.coalIslandArr.forEach((coalIsland) => {
+            if (coalIsland.positionX <= 100 ) {
+                coalIsland.isAccelerated = true;
+            }
+        });
+    }
 
     accelerateVisibleOctopus() {
         this.octopusArr.forEach((octopus) => {
@@ -132,6 +154,13 @@ class Game {
             iceberg.domElement.remove(); // remove from the dom
             this.icebergsArr.splice(i, 1); // remove from the array
             this.numberOfIcebergsPassed++ // counts passed icebergs
+        }
+    }
+
+    removeCoalIslandIfOutside(coalIsland, i) {
+        if (coalIsland.positionX < 0) {
+            coalIsland.domElement.remove();
+            this.coalIslandArr.splice(i, 1);
         }
     }
 
@@ -152,6 +181,7 @@ class Game {
             location.href = "./winningpage.html";
         }
     }
+
 
     detectCollision(iceberg) {
         const shipLeft = this.ship.positionX;
@@ -175,6 +205,38 @@ class Game {
         }
     }
 
+    detectCoalIslandCollision(coalIsland) {
+        const shipLeft = this.ship.positionX;
+        const shipRight = this.ship.positionX + this.ship.width;
+        const shipTop = this.ship.positionY + this.ship.height;
+        const shipBottom = this.ship.positionY;
+
+        const coalIslandLeft = coalIsland.positionX;
+        const coalIslandRight = coalIsland.positionX + coalIsland.size;
+        const coalIslandTop = coalIsland.positionY + coalIsland.size;
+        const coalIslandBottom = coalIsland.positionY;
+
+        if (
+            shipLeft < coalIslandRight &&
+            shipRight > coalIslandLeft &&
+            shipTop > coalIslandBottom &&
+            shipBottom < coalIslandTop
+        ) {
+            this.handleCoalIslandCollision(coalIsland)
+        }
+    }
+
+    handleCoalIslandCollision(coalIsland) {
+        coalIsland.domElement.remove();
+        this.coalIslandArr.splice(coalIsland.index, 1);
+
+        const currentTime = Date.now();
+        const elapsedTime = (currentTime - this.startTime) / 1000;
+        const newTime = elapsedTime - 5;
+        this.startTime = currentTime - newTime * 1000;
+        this.updateTimer();
+    }
+
     detectOctopusCollision(octopus) {
         const shipLeft = this.ship.positionX;
         const shipRight = this.ship.positionX + this.ship.width;
@@ -186,14 +248,12 @@ class Game {
         const octopusTop = octopus.positionY + octopus.radius * 2;
         const octopusBottom = octopus.positionY;
 
-        const isColliding = (
+        if (
             shipLeft < octopusRight &&
             shipRight > octopusLeft &&
             shipTop > octopusBottom &&
             shipBottom < octopusTop
-        );
-    
-        if (isColliding) {
+        ) {
             this.handleOctopusCollision(octopus);
         }
     }
@@ -309,6 +369,73 @@ class Icebergs {
         this.domElement.appendChild(triangle);
     }
     // apply acceleration to move the iceberg to the left
+    moveLeft() {
+        if (this.positionX > 0 - this.size) {
+            const speed = this.isAccelerated ? 4 : 2;
+            this.positionX -= speed;
+            this.domElement.style.left = this.positionX + "vw";
+        }
+    }
+}
+
+class CoalIsland {
+    constructor(isAccelerated) {
+        this.size = 10;
+        this.positionX = 100;
+        this.positionY = Math.floor(Math.random() * (100 - this.size + 1)); //
+        this.domElement = null;
+
+        this.isAccelerated = isAccelerated;
+
+        this.createDomElement();
+        this.createTriangle();
+    }
+    createDomElement() {
+        // create dom element icebergs
+        this.domElement = document.createElement("div");
+
+        // set id icebergs
+        this.domElement.id = "coalIsland";
+        this.domElement.style.left = this.positionX + "vw";
+        this.domElement.style.bottom = this.positionY + "vh";
+
+        // append to the dom
+        const parentElm = document.getElementById("ocean");
+        parentElm.appendChild(this.domElement);
+    }
+    createTriangle() {
+        const triangle = document.createElement("div");
+        triangle.style.width = "0";
+        triangle.style.height = "0";
+        triangle.style.borderLeft = this.size / 2 + "vw solid transparent";
+        triangle.style.borderRight = this.size / 2 + "vw solid transparent";
+        triangle.style.borderBottom = this.size + "vh solid transparent";
+        triangle.style.position = "relative";
+
+        // image positioning in centre of triangle
+        const centerX = this.size / 2;
+        const centerY = this.size;
+
+        // add the iceberg image
+        const coalIslandImage = document.createElement("img");
+        coalIslandImage.src = "./images/coal-island.png";
+        coalIslandImage.style.width = this.size + "vw";
+        coalIslandImage.style.height = this.size + "vh";
+        coalIslandImage.style.position = "absolute";
+        coalIslandImage.style.left = `calc(50% - ${centerX}vw)`;
+        coalIslandImage.style.bottom = `calc(100% - ${centerY}vh)`;
+
+        // apply acceleration if it's currently active
+        const speed = this.isAccelerated ? 4 : 2;
+        this.positionX -= speed;
+
+        // append image to triangle
+        triangle.appendChild(coalIslandImage);
+
+        // append triangle to coal island div 
+        this.domElement.appendChild(triangle);
+    }
+    // apply acceleration to move the coal island to the left
     moveLeft() {
         if (this.positionX > 0 - this.size) {
             const speed = this.isAccelerated ? 4 : 2;

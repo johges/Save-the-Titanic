@@ -8,7 +8,7 @@ body {
 
 #start {
     background-image: url(../images/background_start_page.jpg);
-    overflow:scroll;
+    overflow: auto;
 }
 
 h1 {

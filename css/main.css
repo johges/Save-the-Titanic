@@ -65,8 +65,8 @@ a {
 /*Game Mechanics */
 
 #ocean {
-    background-image: url(../images/background.png);
-    background-color: rgb(55, 55, 99);
+    background-image: url(../images/background.jpg);
+    /* background-color: rgb(55, 55, 99); */
     background-size: cover;
     height: 100vh;
     position: relative;
@@ -110,7 +110,7 @@ a {
     position: absolute;
     top: 10px;
     right: 10px;
-    color: black;
+    color: white;
     font-size: 24px;
     font-weight: bold;
 }

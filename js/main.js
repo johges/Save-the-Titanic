@@ -12,6 +12,11 @@ class Game {
         this.timerInterval = null;
         this.updateTimer = this.updateTimer.bind(this);
         this.startBackgroundMovement();
+        this.bgSound = new Audio("./sounds/ocean-background-sound.mp3");
+        this.bgSound.loop = true;
+        this.startBackgroundSound();
+        this.coalIslandCollisionSound = new Audio("./sounds/boat-horn.mp3");
+        this.octopusCollisionSound = new Audio("./sounds/octopus-sound.mp3");
     }
 
     startBackgroundMovement() {
@@ -19,6 +24,7 @@ class Game {
     }
 
     start() {
+        this.startBackgroundSound();
         //start the timer
         this.startTime = Date.now();
         this.timerInterval = setInterval(() => {
@@ -77,6 +83,10 @@ class Game {
                 this.detectOctopusCollision(octopus);
             });
         }, 50)
+    }
+
+    startBackgroundSound() {
+        this.bgSound.play();
     }
 
     moveBackground() {
@@ -227,6 +237,9 @@ class Game {
     }
 
     handleCoalIslandCollision(coalIsland) {
+        this.coalIslandCollisionSound.currentTime = 0;
+        this.coalIslandCollisionSound.play();
+
         coalIsland.domElement.remove();
         this.coalIslandArr.splice(coalIsland.index, 1);
 
@@ -259,6 +272,9 @@ class Game {
     }
 
     handleOctopusCollision(octopus) {
+        this.octopusCollisionSound.currentTime = 0;
+        this.octopusCollisionSound.play();
+
         octopus.domElement.remove();
         this.octopusArr.splice(octopus.index, 1);
 

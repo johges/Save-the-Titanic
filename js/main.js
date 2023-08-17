@@ -1,5 +1,5 @@
 const timerElement = document.getElementById("timer");
-let backgroundPosition = 100; 
+let backgroundPosition = 100;
 
 class Game {
     constructor() {
@@ -145,7 +145,7 @@ class Game {
 
     accelerateVisibleCoalIsland() {
         this.coalIslandArr.forEach((coalIsland) => {
-            if (coalIsland.positionX <= 100 ) {
+            if (coalIsland.positionX <= 100) {
                 coalIsland.isAccelerated = true;
             }
         });
@@ -153,7 +153,7 @@ class Game {
 
     accelerateVisibleOctopus() {
         this.octopusArr.forEach((octopus) => {
-            if (octopus.positionX <= 100 ) {
+            if (octopus.positionX <= 100) {
                 octopus.isAccelerated = true;
             }
         });
@@ -284,7 +284,7 @@ class Game {
         this.startTime = currentTime - newTime * 1000;
         this.updateTimer();
     }
-    
+
 }
 
 class Ship {
@@ -490,7 +490,7 @@ class Octopus {
         const circle = document.createElement("div");
         circle.style.width = "0";
         circle.style.height = "0";
-        circle.style.borderRadius = `${this.radius}vw`; 
+        circle.style.borderRadius = `${this.radius}vw`;
         circle.style.position = "relative";
 
         // image positioning in centre of circle

@@ -1,5 +1,5 @@
 body {
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     overflow: hidden;
 }
@@ -15,7 +15,7 @@ h1 {
     text-align: center;
     color: antiquewhite;
     margin-top: 20px;
-    font-size:xx-large;
+    font-size: xx-large;
     font-weight: bolder;
 }
 
@@ -26,9 +26,9 @@ h2 {
 }
 
 p {
-    text-align:center;
-    font-size:larger;
-    color:antiquewhite;
+    text-align: center;
+    font-size: larger;
+    color: antiquewhite;
 }
 
 button {
@@ -37,11 +37,18 @@ button {
     border: none;
     border-radius: 15px;
     font-size: 25px;
-    color: black;
+    color: rgb(77, 39, 192);
+    font-weight: bold;
     display: block;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
+    text-decoration: none;
+}
+
+button a {
+    text-decoration: none;
+    color: inherit;
 }
 
 .start-image {
@@ -72,7 +79,8 @@ a {
     background-color: #8e5e27;
 }
 
-.obstacles, .arrows {
+.obstacles,
+.arrows {
     display: inline-block;
     margin: 0 50px;
     vertical-align: middle;
@@ -85,6 +93,7 @@ a {
 .arrows {
     width: 5%;
 }
+
 /*Game Mechanics */
 
 #ocean {
@@ -160,18 +169,17 @@ a {
 }
 
 .gameOver-image {
-        width: 900px;
-        height: 900px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-}
-    
-#page-gameover img {
-        max-width: 100%;
-        max-height: 100%;
+    width: 900px;
+    height: 900px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
+#page-gameover img {
+    max-width: 100%;
+    max-height: 100%;
+}
 
 /* You won */
 
@@ -201,5 +209,3 @@ a {
     text-align: center;
     margin-bottom: 10px;
 }
-
-

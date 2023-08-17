@@ -160,8 +160,8 @@ a {
 }
 
 .gameOver-image {
-        width: 650px;
-        height: 650px;
+        width: 900px;
+        height: 900px;
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -181,8 +181,8 @@ a {
 }
 
 .win-image {
-    width: 500px;
-    height: 500px;
+    width: 700px;
+    height: 700px;
     display: block;
     margin-left: auto;
     margin-right: auto;

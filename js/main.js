@@ -313,7 +313,7 @@ class Ship {
 
 class Icebergs {
     constructor(isAccelerated) {
-        this.size = 10;
+        this.size = 7;
         this.positionX = 100;
         this.positionY = Math.floor(Math.random() * (100 - this.size + 1)); //
         this.domElement = null;
@@ -380,7 +380,7 @@ class Icebergs {
 
 class CoalIsland {
     constructor(isAccelerated) {
-        this.size = 10;
+        this.size = 9;
         this.positionX = 100;
         this.positionY = Math.floor(Math.random() * (100 - this.size + 1)); //
         this.domElement = null;
@@ -447,7 +447,7 @@ class CoalIsland {
 
 class Octopus {
     constructor(isAccelerated) {
-        this.radius = 8;
+        this.radius = 5;
         this.positionX = 100;
         this.positionY = Math.floor(Math.random() * (100 - this.radius * 2 + 1)); //
         this.domElement = null;
